@@ -8,7 +8,7 @@ class PremiumUltimateViewData:
     def __init__(self, user, timestamp, isPremium):
         self.votes = {"yes": 0, "no": 0}
         self.user = user
-        self.description = f"Should {user.mention} have the **{"Premium" if isPremium else "Ultimate"}** role?"
+        self.description = f"Should {user.mention} have the **{'Premium' if isPremium else 'Ultimate'}** role?"
         self.timestamp = timestamp
         self.isPremium = isPremium
 
