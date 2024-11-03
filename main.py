@@ -1,10 +1,24 @@
+import asyncio
 import os
+import threading
 import discord
 from discord.ext import commands
 import datetime
 from random import choice
 
 from utils import NOTIFICATION_TEMPLATES, schedule
+
+
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "online", 200, {"Content-Type": "text/plain"}
+
+def run_flask():
+    app.run(port=8000)
 
 
 class RoyaltyBot(commands.Bot):
@@ -80,8 +94,14 @@ class RoyaltyBot(commands.Bot):
 
 if __name__ == "__main__":
     print("----------------------")
+
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.start()
+
+    print("__-__-__-__-__-__-__-__-__")
+
     intents = discord.Intents.default()
     intents.message_content = True
     bot = RoyaltyBot(command_prefix="!", intents=intents)
 
-    bot.run(os.environ["DISCORD_TOKEN"]) # TOKEN
+    asyncio.run(bot.run(os.environ["DISCORD_TOKEN"])) # TOKEN
