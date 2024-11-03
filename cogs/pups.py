@@ -41,7 +41,7 @@ class VoteView(View):
     def get_vote_embed(self):
         diff = self.data.votes["yes"] - self.data.votes["no"]
         embed = discord.Embed(
-            title=f"{"Premium" if self.data.isPremium else "Ultimate"} Role Vote",
+            title=f'{"Premium" if self.data.isPremium else "Ultimate"} Role Vote',
             description=self.data.description,
             color=discord.Color.blue() if diff == 0 else discord.Color.red() if diff < 0 else discord.Color.green(),
             timestamp=self.data.timestamp
