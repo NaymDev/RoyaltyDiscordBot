@@ -59,7 +59,6 @@ class BountyCog(commands.Cog):
         embed.add_field(name="Proxy", value=proxy.value, inline=True)
         embed.add_field(name="Gamemode", value=gamemode.value, inline=True)
         embed.set_footer(text="Press submit once you have eliminated the target.")
-        await interaction.guild.fetch_roles()
         
         class SubmitView(discord.ui.View):
             def __init__(self, bot):
@@ -79,8 +78,9 @@ class BountyCog(commands.Cog):
                 overwrites = {
                     guild.default_role: discord.PermissionOverwrite(view_channel=False),
                     interaction.user: discord.PermissionOverwrite(view_channel=True),
-                    **{guild.get_role(role): discord.PermissionOverwrite(view_channel=True) for role in self.bot.ROLES_STAFF},
+                    **{{guild.get_role(role): discord.PermissionOverwrite(view_channel=True) for role in self.bot.ROLES_STAFF if guild.get_role(role) is not None}},
                 }
+                print(overwrites)
                 bounty_channel = await guild.create_text_channel(
                     name=f"bounty-{interaction.user.name}",
                     overwrites=overwrites,
@@ -99,6 +99,7 @@ class BountyCog(commands.Cog):
         
         # Respond with the initial message and the submit button view
         v = SubmitView(self.bot)
+        await interaction.guild.fetch_roles()
         await interaction.response.send_message(embed=embed, view=v)
         message: discord.InteractionMessage = await interaction.original_response()
         v.button.om = message
