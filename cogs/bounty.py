@@ -59,7 +59,7 @@ class BountyCog(commands.Cog):
         embed.add_field(name="Proxy", value=proxy.value, inline=True)
         embed.add_field(name="Gamemode", value=gamemode.value, inline=True)
         embed.set_footer(text="Press submit once you have eliminated the target.")
-        interaction.guild.fetch_roles()
+        await interaction.guild.fetch_roles()
         
         class SubmitView(discord.ui.View):
             def __init__(self, bot):
