@@ -79,6 +79,7 @@ class RoyaltyBot(commands.Bot):
         view.stop()
 
 if __name__ == "__main__":
+    print("----------------------")
     intents = discord.Intents.default()
     intents.message_content = True
     bot = RoyaltyBot(command_prefix="!", intents=intents)
