@@ -80,7 +80,7 @@ class BountyCog(commands.Cog):
                     interaction.user: discord.PermissionOverwrite(view_channel=True),
                     **{guild.get_role(role): discord.PermissionOverwrite(view_channel=True) for role in self.bot.ROLES_STAFF},
                 }
-                for r, o in overwrites:
+                for r in overwrites.keys():
                     if r is None:
                         overwrites.pop(r)
                 print(overwrites)
