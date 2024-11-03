@@ -60,13 +60,13 @@ class RoyaltyBot(commands.Bot):
             self.add_pups(view.data.timestamp, view)
             return
         elif diff > 0:
-            await view.message.channel.send(f"{await view.data.user.mention} will get the **{"Premium" if view.data.isPremium else "Ultimate"}** role")
+            await view.message.channel.send(f'{await view.data.user.mention} will get the **{"Premium" if view.data.isPremium else "Ultimate"}** role')
             if view.data.isPremium:
                 await view.data.user.add_role(1216075428834578463)
             else:
                 await view.data.user.add_role(1297941958773309460)
         else:
-            await view.message.channel.send(f"{await view.data.user.mention} won't get the **{"Premium" if view.data.isPremium else "Ultimate"}** role")
+            await view.message.channel.send(f"{await view.data.user.mention} won't get the **{'Premium' if view.data.isPremium else 'Ultimate'}** role")
             if view.data.isPremium:
                 await view.data.user.remove_role(1216075428834578463)
             else:
