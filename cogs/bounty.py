@@ -80,9 +80,13 @@ class BountyCog(commands.Cog):
                     interaction.user: discord.PermissionOverwrite(view_channel=True),
                     **{guild.get_role(role): discord.PermissionOverwrite(view_channel=True) for role in self.bot.ROLES_STAFF},
                 }
+                to_remove = []
                 for r in overwrites.keys():
                     if r is None:
-                        overwrites.pop(r)
+                        to_remove.append(r)
+                for r in to_remove:
+                    overwrites.pop(r)
+                    
                 print(overwrites)
                 bounty_channel = await guild.create_text_channel(
                     name=f"bounty-{interaction.user.name}",
