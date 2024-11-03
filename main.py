@@ -1,10 +1,8 @@
-import asyncio
 import os
-from typing import List
 import discord
 from discord.ext import commands
 import datetime
-from random import choice, choices
+from random import choice
 
 from utils import NOTIFICATION_TEMPLATES, schedule
 
@@ -85,4 +83,4 @@ if __name__ == "__main__":
     intents.message_content = True
     bot = RoyaltyBot(command_prefix="!", intents=intents)
 
-    bot.run("") # TOKEN
+    bot.run(os.environ["DISCORD_TOKEN"]) # TOKEN
