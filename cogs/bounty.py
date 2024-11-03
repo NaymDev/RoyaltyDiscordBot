@@ -12,7 +12,7 @@ class ApproveButton(discord.ui.Button):
             self.sub_view = view
 
         async def callback(self, interaction: discord.Interaction):
-            if any(role.id in self.bot.ROLES_STAFF for role in interaction.user.roles):
+            if any(role in self.bot.ROLES_STAFF for role in interaction.user.roles):
                 await interaction.response.send_message(
                     f"Bounty approved by {interaction.user.mention}."
                 )
