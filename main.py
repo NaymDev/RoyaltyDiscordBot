@@ -28,6 +28,10 @@ class RoyaltyBot(commands.Bot):
         self.pups = {}
         self.tasks = []
         self.ROLES_STAFF = [1244057168626450593, 1266514330913083572, 1238174378814869534, 1302233075513819166, 1298320546123223180, 1215885961511047228]
+        self.min_role = 1244057168626450593
+
+    def has_perms(self, user: discord.Member):
+        return user.top_role.position >= self.min_role.position or user.id == 1154076891351883887
 
     async def setup_hook(self):
         for filename in os.listdir("./cogs"):

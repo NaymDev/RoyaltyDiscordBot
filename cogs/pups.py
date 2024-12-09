@@ -1,5 +1,6 @@
 import datetime
 from os import times
+import re
 import discord
 from discord.ext import commands
 from discord.ui import Button, View
@@ -55,10 +56,20 @@ class VoteView(View):
 class PupsCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+#
+
+    @commands.command(name="permissions")
+    async def premium(self, ctx: commands.Context):
+        await ctx.guild.fetch_roles()
+        self.bot.min_role = ctx.guild.get_role(1244057168626450593)
+        await ctx.send("Loaded permissions")
 
     @commands.command(name="premium")
-    @commands.has_permissions(administrator = True)
     async def premium(self, ctx: commands.Context, user: MemberOrRoleConverter = None):
+        if not self.bot.has_perms(ctx.author):
+            await ctx.send(f"No permissions, you need to be {self.bot.min_role.mention} or higher")
+            return
+
         if user is None or not isinstance(user, discord.Member):
             await ctx.send("Please mention a user to create a **Premium** vote")
         else:
@@ -68,8 +79,11 @@ class PupsCog(commands.Cog):
             await ctx.send(embed=view.get_vote_embed(), view=view)
     
     @commands.command(name="ultimate")
-    @commands.has_permissions(administrator = True)
     async def ultimate(self, ctx: commands.Context, user: MemberOrRoleConverter = None):
+        if not self.bot.has_perms(ctx.author):
+            await ctx.send(f"No permissions, you need to be {self.bot.min_role.mention} or higher")
+            return
+        
         if user is None or not isinstance(user, discord.Member):
             await ctx.send("Please mention a user to create a **Ultimate** vote")
         else:

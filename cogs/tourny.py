@@ -22,8 +22,11 @@ class TournyCog(commands.Cog):
         self.bot = bot
 
     @commands.command(name="tournament")
-    @commands.has_permissions(administrator = True)
     async def tournament(self, ctx: commands.Context, tournament_day: str = None, tournament_time: str = None):
+        if not self.bot.has_perms(ctx.author):
+            await ctx.send(f"No permissions, you need to be {self.bot.min_role.mention} or higher")
+            return
+        
         try:
             if (not tournament_time or not tournament_day): 
                 raise ValueError("Tournament time is not set.")

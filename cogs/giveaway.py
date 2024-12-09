@@ -1,5 +1,4 @@
 import datetime
-from enum import member
 import discord
 from discord.ext import commands
 from discord.ui import Button, View
@@ -34,8 +33,11 @@ class GiveawayCog(commands.Cog):
         self.bot = bot
 
     @commands.command(name="giveaway")
-    @commands.has_permissions(administrator = True)
     async def giveaway(self, ctx: commands.Context, duration: str, *args):
+        if not self.bot.has_perms(ctx.author):
+            await ctx.send(f"No permissions, you need to be {self.bot.min_role.mention} or higher")
+            return
+        
         winner_count = 1
         price = ' '.join(args)
         duration_in_seconds = None

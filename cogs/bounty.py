@@ -31,6 +31,27 @@ class ApproveButton(discord.ui.Button):
                     ephemeral=True
                 )
 
+class DenyButton(discord.ui.Button):
+        def __init__(self, bot, view, user):
+            super().__init__(label="Approve", style=discord.ButtonStyle.danger)
+            self.bot = bot
+            self.sub_view = view
+            self.user = user
+
+        async def callback(self, interaction: discord.Interaction):
+            if any(role in self.bot.ROLES_STAFF for role in interaction.user.roles):
+                await interaction.response.send_message(
+                    f"Bounty denied by {interaction.user.mention}."
+                )
+                # Notify the user of bounty approval
+                await self.user.send(f"Your bounty on {self.bounty_channel.name} was denied!")
+                # Delete the channel after approval
+                await self.bounty_channel.delete(reason="Bounty denied")
+            await interaction.response.send_message(
+                    "You cannot deny submissions!",
+                    ephemeral=True
+                )
+
 class ApprovalView(discord.ui.View):
     def __init__(self, user: discord.Member, bounty_channel: discord.TextChannel, bot, view):
         super().__init__(timeout=None)
@@ -54,6 +75,10 @@ class BountyCog(commands.Cog):
                           in_game_name: str,
                           proxy: Proxy,
                           gamemode: Gamemode):
+        if not self.bot.has_perms(interaction.user):
+            await interaction.response.send_message(f"No permissions, you need to be {self.bot.min_role.mention} or higher")
+            return
+        
         embed = discord.Embed(title="🎯 New Bounty Posted!", color=discord.Color.red())
         embed.add_field(name="Target In-Game Name", value=in_game_name, inline=False)
         embed.add_field(name="Proxy", value=proxy.value, inline=True)
@@ -107,15 +132,18 @@ class BountyCog(commands.Cog):
         # Respond with the initial message and the submit button view
         v = SubmitView(self.bot)
         await interaction.guild.fetch_roles()
-        await interaction.response.send_message(embed=embed, view=v)
+        await interaction.response.send_message("||" + interaction.guild.get_role(1294437889001918624).mention + "||",embed=embed, view=v)
         message: discord.InteractionMessage = await interaction.original_response()
         v.button.om = message
 
        
     
     @commands.command(name="sync")
-    @commands.has_permissions(administrator = True)
     async def sync(self, ctx: commands.Context):
+        if not self.bot.has_perms(ctx.author):
+            await ctx.send(f"No permissions, you need to be {self.bot.min_role.mention} or higher")
+            return
+        
         synced = await self.bot.tree.sync()
         print(f"Synced {len(synced)} command(s).")
         
